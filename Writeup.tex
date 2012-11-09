@@ -1,0 +1,264 @@
+
+\documentclass[10pt,fleqn,a4paper]{article} % use larger type; default would be 10pt
+% \usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+\usepackage[a4paper, top=10mm, bottom=10mm, left = 20mm, includefoot]{geometry}
+%\usepackage{geometry}
+%\geometry{a4paper}
+%\usepackage{a4wide}
+\usepackage{amsmath}               % great math stuff
+\usepackage{amssymb}
+\usepackage{amsfonts}              % for blackboard bold, etc
+\usepackage{amsthm} 
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% % These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{graphicx}
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+%\pagestyle{empty} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+%\lhead{}\chead{}\rhead{}
+%\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\usepackage{float}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+%\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+%\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+%\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+%\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Customisations for easy math typing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\labelenumi}{(\alph{enumi})} % Use letters for enumerate
+% \DeclareMathOperator{\Sample}{Sample}
+\let\vaccent=\v % rename builtin command \v{} to \vaccent{}
+\renewcommand{\v}[1]{\ensuremath{\mathbf{#1}}} % for vectors
+\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}} 
+% for vectors of Greek letters
+\newcommand{\uv}[1]{\ensuremath{\mathbf{\hat{#1}}}} % for unit vector
+\newcommand{\abs}[1]{\left| #1 \right|} % for absolute value
+\newcommand{\avg}[1]{\left< #1 \right>} % for average
+\let\underdot=\d % rename builtin command \d{} to \underdot{}
+\renewcommand{\d}[2]{\frac{d #1}{d #2}} % for derivatives
+\newcommand{\dd}[2]{\frac{d^2 #1}{d #2^2}} % for double derivatives
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} 
+% for partial derivatives
+\newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}} 
+% for double partial derivatives
+\newcommand{\pdc}[3]{\left( \frac{\partial #1}{\partial #2}
+ \right)_{#3}} % for thermodynamic partial derivatives
+\newcommand{\ket}[1]{\left| #1 \right>} % for Dirac bras
+\newcommand{\bra}[1]{\left< #1 \right|} % for Dirac kets
+\newcommand{\braket}[2]{\left< #1 \vphantom{#2} \right|
+ \left. #2 \vphantom{#1} \right>} % for Dirac brackets
+\newcommand{\matrixel}[3]{\left< #1 \vphantom{#2#3} \right|
+ #2 \left| #3 \vphantom{#1#2} \right>} % for Dirac matrix elements
+\newcommand{\grad}[1]{\gv{\nabla} #1} % for gradient
+\let\divsymb=\div % rename builtin command \div to \divsymb
+\renewcommand{\div}[1]{\gv{\nabla} \cdot #1} % for divergence
+\newcommand{\curl}[1]{\gv{\nabla} \times #1} % for curl
+\let\baraccent=\= % rename builtin command \= to \baraccent
+\renewcommand{\=}[1]{\stackrel{#1}{=}} % for putting numbers above =
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\theoremstyle{remark}
+\newtheorem*{rmk}{Remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% End custom stuff block
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{sharpc}{language=[Sharp]C, frame=lr, rulecolor=\color{blue!80!black}}
+
+\title{PHYS2320 Computing 2 - Project 2}
+\author{Josh Palmer}
+%\date % Activate to display a given date or no date (if empty),
+		 % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+\section{Calculating $\int x^2$}
+To implement this, I wrote a series of functions that, given a start, end, and mesh point, evaluate any given function, and store the values of that function at each desired point in an array. Once the values of the function at the desired intervals are known, applying the trapezoidal rule and Simpson's rule over the array is trivial.
+
+\subsection{Results}
+
+The analytical solution for this is simple:
+\[
+ \int_0^{10} x^2 = \left[ \frac{x^3}{3} \right]_0^{10} = \frac{1000}{3} = 333.\dot{3}
+\]
+\subsection{Computational Results}
+
+% Table generated by Excel2LaTeX from sheet 'task2'
+\begin{table}[htbp]
+  \centering
+  \caption{Program results for $\int x^2$}
+    \begin{tabular}{rrr}
+    \toprule
+    Mesh points & Trapezoid rule & Simpson's rule \\
+    \midrule
+    \multicolumn{1}{c}{10} & \multicolumn{1}{c}{$333.\dot{3}$} & 335 \\
+    \multicolumn{1}{c}{50} & \multicolumn{1}{c}{$333.\dot{3}$} & 333.4 \\
+    \multicolumn{1}{c}{100} & \multicolumn{1}{c}{$333.\dot{3}$} & $333.34\dot{9}$ \\
+    \bottomrule
+    \end{tabular}%
+  \label{tab:addlabel}%
+\end{table}%
+
+
+As is apparent from the table, Simpson's rule is by far the best in this situation: obtaining the correct value using only 10 mesh points, while the trapezoid rule is far less accurate, even at 100 iterations.
+\\\\
+It is obvious that this is down to it taking 3 points into consideration instead of 2.
+
+\section{Calculating the voltage over a capacitor with time-varying current}
+\subsection{Mathematical analysis}
+If we call the current $ i(t)$, then the voltage at a time $t$ is given by:
+\[
+v(t) = \frac{1}{C} \int_{t_0}^t i(t) dt + v(t_0)
+\]
+Where $C$ is the capacitance. Since the question does not mention anything about the initial voltage, we shall assume that $v(t_0)$ is zero.
+\\\\
+In this case, $i(t) = 5 \sin^2{(\frac{t}{\pi})}$, so the full formula for voltage will be:
+\[
+v(t) = \frac{1}{C} \int_{t_0}^t 5 \sin^2{\left(\frac{t}{\pi}\right)}  \, dt
+\]
+\\\\
+Solving the integral mathematically, we get:
+\[
+v(t) = - \frac{5}{4C} (\pi \sin{\left(\frac{2x}{\pi}\right)} - 2x)
+\]
+\subsection{Computational implementation}
+Adapting the functions from the previous task was trivial, as my function to generate the array of values took a function as an argument:
+\lstset{style=sharpc}
+\begin{lstlisting}
+static double[] ValuesToIntegrateOver(double start, double end,
+	int meshpoints, Func<double, double> Function)
+\end{lstlisting}
+Writing a function to return $\frac{1}{C} \cdot i(t)$ was also trivial:
+\lstset{style=sharpc}
+\begin{lstlisting}
+static double SinSquaredStuff(double t)
+{
+   return 0.5 * Math.Pow(Math.Sin(t / Math.PI), 2);
+}
+\end{lstlisting}
+I then simply called my previous set of functions for $t = { 1 , 2 , 3 , 4, 5}$, with mesh point values of 10, 50, and 100, and wrote the results to a .csv file for easy analysis.\\\\
+However, one interesting hurdle I ran into related to floating point number errors. Initially, when evaluating $i(t)$, it was looping over all values of $t$, and incrementing $t$ by $h$:
+\lstset{style=sharpc}
+\begin{lstlisting}
+static double[] ValuesToIntegrateOver(double start, double end,
+int meshpoints, Func<double, double> Function)
+{      
+	double interval = (end - start) / meshpoints;
+	double[] values = new double[meshpoints + 1];
+	int count = 0;
+
+	for (double x = start ; x <= end; x+=interval)
+	{
+		values[count] = Function(x);
+		count++;
+		if (count >= 50)
+		{
+			continue;
+		}
+	}
+	return values;
+}
+\end{lstlisting}
+The issue here arose when using a large number of mesh points. $x$ would be incremented by a relatively small interval, and this would introduce a slight floating point error. When performing normal arithmetic, this would be many orders of magnitude smaller than the actual number, and thus insignificant, but as here I was using $x$ as the control variable for the {\bf for} loop, the error caused problems.
+
+For example, when integrating between $t=0$ and $t=1$, with 50 mesh points, when evaluating the penultimate value, $x$ was $0.98000000000000054$. On the next iteration of the loop, $x$ is increased by $0.2$, which, due to the floating point error - is greater than $1.0$, and thus breaks out of the loop.
+
+\begin{figure}[H]
+\centerline{\includegraphics[width=6in]{graph2.png}}
+\caption{Plot of calculated values as a fraction of the actual value - with floating point errors}
+\label{fig:fig1}
+\end{figure}
+
+
+This meant that in the array of values, the final value was unintentionally left empty, and obviously this caused the calculated values of the integrals to be incorrect, manifesting itself in an interesting graph (seen in Figure~\ref{fig:fig1}) where most of the values were incorrect, but some ($t = 3$ at 50 mesh points, and $t=5$ for both 50 and 100 mesh points) had the penultimate $t_n$ correctly represented as a floating point number, and thus reached the end of the loop and gave the correct value.
+
+After all the effort taken to track down the source of this bug after noticing the odd graph, fortunately fixing it was easy - changing the loop to iterate over $n$, and tracking $x$ separately.
+\subsection{Results}
+Since the numerical results give such accurate results, the most representative way of representing how well they approximate the actual value is by plotting them as a fraction of the actual value, as seen in Figure 2.
+\begin{figure}[H]
+\centerline{\includegraphics[width=6in]{graph1.png}}
+\caption{Plot of calculated values as a fraction of the actual value}
+\label{fig:fig2}
+\end{figure}
+
+The results are impressive: using Simpson's rule with only 10 mesh points gives values within $0.1\%$ of the actual value. It takes 50 for the trapezium rule to produce similar results. The results improve slightly with increasing iterations.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Calculated voltages from Simpson's rule with 100 mesh points}
+    \begin{tabular}{cc}
+    \toprule
+    T     & V(t)  \\
+    \midrule
+    1     & 0.016384706 \\
+    2     & 0.123379797 \\
+    3     & 0.37965856 \\
+    4     & 0.773758179 \\
+    5     & 1.26629477 \\
+    \bottomrule
+    \end{tabular}%
+  \label{tab:taskb}%
+\end{table}
+
+A table of the most accurate results is given in Table~\ref{tab:taskb}.
+
+\section{Volume integral}
+\subsection{Mathematical Analysis and Implementation}
+
+We are given a charge density $\rho = 30 x^2 y$, and told to integrate for $ 0 \le x \le 2 m, 0 \le y \le 2 m, 0 \le z \le 2 m$.
+
+Fortunately we can take the integral and simplify it somewhat which makes implementing it computationally significantly easier:
+
+\begin{align*}
+Q = \int 30 x^2 y \, d\rho & = 30 \cdot \int x^2 dx \cdot \int y dy \cdot \int dz\\
+& = 30 \cdot \frac{x^3}{3} \cdot \frac{y^2}{2} \cdot z\\\\
+Q & = 5 x^3 y^2 z \\\\
+& = 30 \cdot \frac{8}{3} \cdot \frac{4}{2} \cdot 2\\
+& = 320
+\end{align*}
+
+We can differentiate this back to obtain the original result to illustrate that this simplification is valid:
+
+\begin{align*}
+\rho & = \frac{\partial^3 Q}{\partial x \partial y \partial z}(5 x^3 y^2 z) \\
+& = \frac{\partial^2 }{\partial y \partial z} (15 x ^2 y^2 z)\\
+& = \frac{\partial}{\partial z} (30 x ^2 y z)\\
+& = 30 x ^2 y 
+\end{align*}
+
+So all that is required to implement this computationally is to write functions for $x^2$ (already done in part 1!) and $y$, run Simpson's rule over both, and then multiply the results together, then by $30$ and $2$. (Since $z$ is not present in $\rho$, there is no need to add up the values of $z$, it is just 2.)
+
+\subsection{Result}
+After implementing the above and running over Simpson's rule with 100 mesh points, we get the expected value of exactly 320, which matches our analytical result perfectly.
+
+\appendix
+\section{Source Code}
+Full source code available at https://github.com/joshp123
+\end{document}
